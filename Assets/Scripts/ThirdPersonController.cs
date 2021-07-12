@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class ThirdPersonController : MonoBehaviour
+public class ThirdPersonController : MonoBehaviour, ThirdPersonInput.IGameplayActions
 {
     public float speed = 6.0f;
     public float turnSmoothTime = 0.1f;
@@ -14,23 +14,27 @@ public class ThirdPersonController : MonoBehaviour
     private float turnSmoothVelocity;
     private bool isGrounded;
 
+    private ThirdPersonInput input;
 
     private void Awake()
     {
         controller = gameObject.GetComponent<CharacterController>();
     }
 
-    public void OnMove(InputValue value)
+    private void OnEnable()
     {
-        this.direction = value.Get<Vector2>();
-    }
-    // Start is called before the first frame update
-    void Start()
-    {
-        
+        if (input == null)
+        {
+            input = new ThirdPersonInput();
+            input.Gameplay.SetCallbacks(this);
+        }
+        input.Gameplay.Enable();
     }
 
-    // Update is called once per frame
+    private void OnDisable()
+    {
+        input.Gameplay.Disable();
+    }
     void Update()
     {
         Move();
@@ -48,5 +52,10 @@ public class ThirdPersonController : MonoBehaviour
             Vector3 moveDirection = Quaternion.Euler(0.0f, angle, 0.0f) * Vector3.forward;
             controller.Move(moveDirection * currentSpeed * Time.deltaTime);
         }
+    }
+
+    public void OnMove(InputAction.CallbackContext context)
+    {
+        this.direction = context.ReadValue<Vector2>();
     }
 }
