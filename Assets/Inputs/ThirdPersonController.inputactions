@@ -71,6 +71,33 @@
                     "isPartOfComposite": true
                 }
             ]
+        },
+        {
+            "name": "Interaction",
+            "id": "999a6c09-edba-4d38-a5e7-f2177990c6f2",
+            "actions": [
+                {
+                    "name": "Take",
+                    "type": "Button",
+                    "id": "386440bd-5f67-4126-af3a-9c53ba0b53f2",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": ""
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "529c559a-395b-49ef-946e-45c5f4ce40ac",
+                    "path": "<Keyboard>/space",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Keyboard",
+                    "action": "Take",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
         }
     ],
     "controlSchemes": [

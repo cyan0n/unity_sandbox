@@ -16,6 +16,10 @@ public class ThirdPersonController : MonoBehaviour, ThirdPersonInput.IGameplayAc
 
     private ThirdPersonInput input;
 
+    //roba nicola
+    public HandTrigger hand;
+    bool holdingBox = false;
+
     private void Awake()
     {
         controller = gameObject.GetComponent<CharacterController>();
@@ -58,4 +62,5 @@ public class ThirdPersonController : MonoBehaviour, ThirdPersonInput.IGameplayAc
     {
         this.direction = context.ReadValue<Vector2>();
     }
+
 }

@@ -93,6 +93,33 @@ public partial class @ThirdPersonInput : IInputActionCollection2, IDisposable
                     ""isPartOfComposite"": true
                 }
             ]
+        },
+        {
+            ""name"": ""Interaction"",
+            ""id"": ""999a6c09-edba-4d38-a5e7-f2177990c6f2"",
+            ""actions"": [
+                {
+                    ""name"": ""Take"",
+                    ""type"": ""Button"",
+                    ""id"": ""386440bd-5f67-4126-af3a-9c53ba0b53f2"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """"
+                }
+            ],
+            ""bindings"": [
+                {
+                    ""name"": """",
+                    ""id"": ""529c559a-395b-49ef-946e-45c5f4ce40ac"",
+                    ""path"": ""<Keyboard>/space"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard"",
+                    ""action"": ""Take"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                }
+            ]
         }
     ],
     ""controlSchemes"": [
@@ -123,6 +150,9 @@ public partial class @ThirdPersonInput : IInputActionCollection2, IDisposable
         // Gameplay
         m_Gameplay = asset.FindActionMap("Gameplay", throwIfNotFound: true);
         m_Gameplay_Move = m_Gameplay.FindAction("Move", throwIfNotFound: true);
+        // Interaction
+        m_Interaction = asset.FindActionMap("Interaction", throwIfNotFound: true);
+        m_Interaction_Take = m_Interaction.FindAction("Take", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -211,6 +241,39 @@ public partial class @ThirdPersonInput : IInputActionCollection2, IDisposable
         }
     }
     public GameplayActions @Gameplay => new GameplayActions(this);
+
+    // Interaction
+    private readonly InputActionMap m_Interaction;
+    private IInteractionActions m_InteractionActionsCallbackInterface;
+    private readonly InputAction m_Interaction_Take;
+    public struct InteractionActions
+    {
+        private @ThirdPersonInput m_Wrapper;
+        public InteractionActions(@ThirdPersonInput wrapper) { m_Wrapper = wrapper; }
+        public InputAction @Take => m_Wrapper.m_Interaction_Take;
+        public InputActionMap Get() { return m_Wrapper.m_Interaction; }
+        public void Enable() { Get().Enable(); }
+        public void Disable() { Get().Disable(); }
+        public bool enabled => Get().enabled;
+        public static implicit operator InputActionMap(InteractionActions set) { return set.Get(); }
+        public void SetCallbacks(IInteractionActions instance)
+        {
+            if (m_Wrapper.m_InteractionActionsCallbackInterface != null)
+            {
+                @Take.started -= m_Wrapper.m_InteractionActionsCallbackInterface.OnTake;
+                @Take.performed -= m_Wrapper.m_InteractionActionsCallbackInterface.OnTake;
+                @Take.canceled -= m_Wrapper.m_InteractionActionsCallbackInterface.OnTake;
+            }
+            m_Wrapper.m_InteractionActionsCallbackInterface = instance;
+            if (instance != null)
+            {
+                @Take.started += instance.OnTake;
+                @Take.performed += instance.OnTake;
+                @Take.canceled += instance.OnTake;
+            }
+        }
+    }
+    public InteractionActions @Interaction => new InteractionActions(this);
     private int m_KeyboardSchemeIndex = -1;
     public InputControlScheme KeyboardScheme
     {
@@ -232,5 +295,9 @@ public partial class @ThirdPersonInput : IInputActionCollection2, IDisposable
     public interface IGameplayActions
     {
         void OnMove(InputAction.CallbackContext context);
+    }
+    public interface IInteractionActions
+    {
+        void OnTake(InputAction.CallbackContext context);
     }
 }
