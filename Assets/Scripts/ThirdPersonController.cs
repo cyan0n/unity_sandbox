@@ -7,6 +7,7 @@ public class ThirdPersonController : MonoBehaviour, ThirdPersonInput.IGameplayAc
 {
     public float speed = 6.0f;
     public float turnSmoothTime = 0.1f;
+    public int index;
 
     private CharacterController controller;
     private Vector2 direction;
@@ -56,6 +57,33 @@ public class ThirdPersonController : MonoBehaviour, ThirdPersonInput.IGameplayAc
 
     public void OnMove(InputAction.CallbackContext context)
     {
-        this.direction = context.ReadValue<Vector2>();
+        this.direction = Round(context.ReadValue<Vector2>(), this.direction.x == 0 ? Vector2.right : Vector2.up);
+    }
+
+    private static Vector2 Round(Vector2 vector2)
+    {
+        return Round(vector2, Vector2.up);
+    }
+
+    private static Vector2 Round(Vector2 vector2, Vector2 priority)
+    {
+        if (vector2 == Vector2.zero)
+        {
+            return Vector2.zero;
+        }
+
+        if (vector2.x == vector2.y)
+        {
+            return priority == Vector2.up
+                ? vector2.y > 0 ? Vector2.up : Vector2.down
+                : vector2.x > 0 ? Vector2.right : Vector2.left;
+        }
+
+        if (vector2.x == 0 || Mathf.Abs(vector2.y) > Mathf.Abs(vector2.x))
+        {
+            return vector2.y > 0 ? Vector2.up : Vector2.down;
+        }
+
+        return vector2.x > 0 ? Vector2.right : Vector2.left;
     }
 }
