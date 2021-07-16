@@ -113,4 +113,16 @@ public static class CardinalDirectionExtensionMethods
             vector.x * Mathf.Sin(delta) + vector.y * Mathf.Cos(delta)
         );
     }
+
+    public static CardinalDirection Priority(this CardinalDirection cardinalDirection, CardinalDirection priorityDirection)
+    {
+        CardinalDirection result = cardinalDirection & priorityDirection;
+        return result == CardinalDirection.None ? cardinalDirection : result;
+    }
+
+    public static CardinalDirection TogglePriority(this CardinalDirection cardinalDirection)
+    {
+        CardinalDirection priority = (CardinalDirection.Latitude & cardinalDirection) == 0 ? CardinalDirection.Longitude : CardinalDirection.Latitude;
+        return cardinalDirection.Priority(priority);
+    }
 }
