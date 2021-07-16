@@ -71,6 +71,30 @@ public static class CardinalDirectionExtensionMethods
         return result;
     }
 
+    public static CardinalDirection ToCardinalDirection(this Degree degree)
+    {
+        CardinalDirection result = CardinalDirection.None;
+        int direction_Idx = Mathf.FloorToInt((degree - 45).Abs / 45);
+        if (direction_Idx == 0 || direction_Idx == 1 || direction_Idx == 2)
+        {
+            result |= CardinalDirection.North;
+        }
+        if (direction_Idx == 2 || direction_Idx == 3 || direction_Idx == 4)
+        {
+            result |= CardinalDirection.East;
+        }
+        if (direction_Idx == 4 || direction_Idx == 5 || direction_Idx == 6)
+        {
+            result |= CardinalDirection.South;
+        }
+        if (direction_Idx == 6 || direction_Idx == 7 || direction_Idx == 0)
+        {
+            result |= CardinalDirection.West;
+        }
+
+        return result;
+    }
+
     public static float ToDeg(this Vector2 vector)
     {
         float result = Mathf.Atan2(vector.x, vector.y) * Mathf.Rad2Deg;
