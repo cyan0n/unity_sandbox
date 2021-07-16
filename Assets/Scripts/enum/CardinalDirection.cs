@@ -50,7 +50,7 @@ public static class CardinalDirectionExtensionMethods
         {
             return result;
         }
-        int direction_Idx = Mathf.FloorToInt(vector.ToDeg() / 45);
+        int direction_Idx = Mathf.FloorToInt(vector.Rotate(-45).ToDeg() / 45);
         if (direction_Idx == 0 || direction_Idx == 1 || direction_Idx == 2)
         {
             result |= CardinalDirection.North;
@@ -73,8 +73,7 @@ public static class CardinalDirectionExtensionMethods
 
     public static float ToDeg(this Vector2 vector)
     {
-        Vector2 rotated = vector.Rotate(-45);
-        float result = Mathf.Atan2(rotated.x, rotated.y) * Mathf.Rad2Deg;
+        float result = Mathf.Atan2(vector.x, vector.y) * Mathf.Rad2Deg;
         if (result < 0)
         {
             result += 360;
