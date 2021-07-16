@@ -7,7 +7,6 @@ public class ThirdPersonController : MonoBehaviour, ThirdPersonInput.IGameplayAc
 {
     public float speed = 6.0f;
     public float turnSmoothTime = 0.1f;
-    public int index;
 
 
     private CharacterController controller;
@@ -59,13 +58,31 @@ public class ThirdPersonController : MonoBehaviour, ThirdPersonInput.IGameplayAc
 
     public void OnMove(InputAction.CallbackContext context)
     {
-        CardinalDirection currentInput = context.ReadValue<Vector2>().ToCardinalDirection();
-        if (currentInput == this.direction)
+        Vector2 vectorInput = context.ReadValue<Vector2>();
+        if (vectorInput == Vector2.zero)
+        {
+            this.direction = CardinalDirection.None;
             return;
-        if ((this.direction & currentInput) != 0)
-            this.direction ^= currentInput;
-        else
-            this.direction = currentInput;
+        }
+        // TODO: Create ControlLayout enumerator
+        CardinalDirection movementCardinal = vectorInput.ToCardinalDirection();
+        if (context.control.layout == "Stick" && (this.direction == CardinalDirection.None || Degree.AcuteDiff(vectorInput, this.direction.ToVector2()) > 45))
+        {
+            this.direction = movementCardinal.TogglePriority();
+        }
+
+        if (context.control.layout == "Key" && movementCardinal != this.direction)
+        {
+            if ((this.direction & movementCardinal) != 0)
+            {
+                this.direction ^= movementCardinal;
+            }
+            else
+            {
+                this.direction = movementCardinal;
+            }
+        }
+
     }
 
 }
