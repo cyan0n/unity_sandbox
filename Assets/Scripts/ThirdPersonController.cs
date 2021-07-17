@@ -16,6 +16,11 @@ public class ThirdPersonController : MonoBehaviour, ThirdPersonInput.IGameplayAc
 
     private ThirdPersonInput input;
 
+    //roba nicola
+    public delegate void GrabAction();
+    public static event GrabAction Grab;
+
+
     private void Awake()
     {
         controller = gameObject.GetComponent<CharacterController>();
@@ -40,6 +45,8 @@ public class ThirdPersonController : MonoBehaviour, ThirdPersonInput.IGameplayAc
         Move();
     }
 
+    
+
     private void Move()
     {
         if (direction.magnitude >= 0.1f)
@@ -57,5 +64,11 @@ public class ThirdPersonController : MonoBehaviour, ThirdPersonInput.IGameplayAc
     public void OnMove(InputAction.CallbackContext context)
     {
         this.direction = context.ReadValue<Vector2>();
+    }
+
+    public void OnGrab(InputAction.CallbackContext context)
+    {
+        if(context.performed)
+            Grab();
     }
 }
