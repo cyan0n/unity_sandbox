@@ -34,6 +34,14 @@ public partial class @ThirdPersonInput : IInputActionCollection2, IDisposable
                     ""expectedControlType"": ""Vector2"",
                     ""processors"": """",
                     ""interactions"": """"
+                },
+                {
+                    ""name"": ""Grab"",
+                    ""type"": ""Button"",
+                    ""id"": ""ca317512-fc65-44de-8103-444252369864"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """"
                 }
             ],
             ""bindings"": [
@@ -91,31 +99,15 @@ public partial class @ThirdPersonInput : IInputActionCollection2, IDisposable
                     ""action"": ""Move"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": true
-                }
-            ]
-        },
-        {
-            ""name"": ""Interaction"",
-            ""id"": ""999a6c09-edba-4d38-a5e7-f2177990c6f2"",
-            ""actions"": [
-                {
-                    ""name"": ""Take"",
-                    ""type"": ""Button"",
-                    ""id"": ""386440bd-5f67-4126-af3a-9c53ba0b53f2"",
-                    ""expectedControlType"": ""Button"",
-                    ""processors"": """",
-                    ""interactions"": """"
-                }
-            ],
-            ""bindings"": [
+                },
                 {
                     ""name"": """",
-                    ""id"": ""529c559a-395b-49ef-946e-45c5f4ce40ac"",
+                    ""id"": ""7155367e-f31c-42ec-96cd-1c6ef2c3aece"",
                     ""path"": ""<Keyboard>/space"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": ""Keyboard"",
-                    ""action"": ""Take"",
+                    ""action"": ""Grab"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -150,9 +142,7 @@ public partial class @ThirdPersonInput : IInputActionCollection2, IDisposable
         // Gameplay
         m_Gameplay = asset.FindActionMap("Gameplay", throwIfNotFound: true);
         m_Gameplay_Move = m_Gameplay.FindAction("Move", throwIfNotFound: true);
-        // Interaction
-        m_Interaction = asset.FindActionMap("Interaction", throwIfNotFound: true);
-        m_Interaction_Take = m_Interaction.FindAction("Take", throwIfNotFound: true);
+        m_Gameplay_Grab = m_Gameplay.FindAction("Grab", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -213,11 +203,13 @@ public partial class @ThirdPersonInput : IInputActionCollection2, IDisposable
     private readonly InputActionMap m_Gameplay;
     private IGameplayActions m_GameplayActionsCallbackInterface;
     private readonly InputAction m_Gameplay_Move;
+    private readonly InputAction m_Gameplay_Grab;
     public struct GameplayActions
     {
         private @ThirdPersonInput m_Wrapper;
         public GameplayActions(@ThirdPersonInput wrapper) { m_Wrapper = wrapper; }
         public InputAction @Move => m_Wrapper.m_Gameplay_Move;
+        public InputAction @Grab => m_Wrapper.m_Gameplay_Grab;
         public InputActionMap Get() { return m_Wrapper.m_Gameplay; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -230,6 +222,9 @@ public partial class @ThirdPersonInput : IInputActionCollection2, IDisposable
                 @Move.started -= m_Wrapper.m_GameplayActionsCallbackInterface.OnMove;
                 @Move.performed -= m_Wrapper.m_GameplayActionsCallbackInterface.OnMove;
                 @Move.canceled -= m_Wrapper.m_GameplayActionsCallbackInterface.OnMove;
+                @Grab.started -= m_Wrapper.m_GameplayActionsCallbackInterface.OnGrab;
+                @Grab.performed -= m_Wrapper.m_GameplayActionsCallbackInterface.OnGrab;
+                @Grab.canceled -= m_Wrapper.m_GameplayActionsCallbackInterface.OnGrab;
             }
             m_Wrapper.m_GameplayActionsCallbackInterface = instance;
             if (instance != null)
@@ -237,43 +232,13 @@ public partial class @ThirdPersonInput : IInputActionCollection2, IDisposable
                 @Move.started += instance.OnMove;
                 @Move.performed += instance.OnMove;
                 @Move.canceled += instance.OnMove;
+                @Grab.started += instance.OnGrab;
+                @Grab.performed += instance.OnGrab;
+                @Grab.canceled += instance.OnGrab;
             }
         }
     }
     public GameplayActions @Gameplay => new GameplayActions(this);
-
-    // Interaction
-    private readonly InputActionMap m_Interaction;
-    private IInteractionActions m_InteractionActionsCallbackInterface;
-    private readonly InputAction m_Interaction_Take;
-    public struct InteractionActions
-    {
-        private @ThirdPersonInput m_Wrapper;
-        public InteractionActions(@ThirdPersonInput wrapper) { m_Wrapper = wrapper; }
-        public InputAction @Take => m_Wrapper.m_Interaction_Take;
-        public InputActionMap Get() { return m_Wrapper.m_Interaction; }
-        public void Enable() { Get().Enable(); }
-        public void Disable() { Get().Disable(); }
-        public bool enabled => Get().enabled;
-        public static implicit operator InputActionMap(InteractionActions set) { return set.Get(); }
-        public void SetCallbacks(IInteractionActions instance)
-        {
-            if (m_Wrapper.m_InteractionActionsCallbackInterface != null)
-            {
-                @Take.started -= m_Wrapper.m_InteractionActionsCallbackInterface.OnTake;
-                @Take.performed -= m_Wrapper.m_InteractionActionsCallbackInterface.OnTake;
-                @Take.canceled -= m_Wrapper.m_InteractionActionsCallbackInterface.OnTake;
-            }
-            m_Wrapper.m_InteractionActionsCallbackInterface = instance;
-            if (instance != null)
-            {
-                @Take.started += instance.OnTake;
-                @Take.performed += instance.OnTake;
-                @Take.canceled += instance.OnTake;
-            }
-        }
-    }
-    public InteractionActions @Interaction => new InteractionActions(this);
     private int m_KeyboardSchemeIndex = -1;
     public InputControlScheme KeyboardScheme
     {
@@ -295,9 +260,6 @@ public partial class @ThirdPersonInput : IInputActionCollection2, IDisposable
     public interface IGameplayActions
     {
         void OnMove(InputAction.CallbackContext context);
-    }
-    public interface IInteractionActions
-    {
-        void OnTake(InputAction.CallbackContext context);
+        void OnGrab(InputAction.CallbackContext context);
     }
 }

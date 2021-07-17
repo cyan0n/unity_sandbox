@@ -17,8 +17,9 @@ public class ThirdPersonController : MonoBehaviour, ThirdPersonInput.IGameplayAc
     private ThirdPersonInput input;
 
     //roba nicola
-    public HandTrigger hand;
-    bool holdingBox = false;
+    public delegate void GrabAction();
+    public static event GrabAction Grab;
+
 
     private void Awake()
     {
@@ -44,6 +45,8 @@ public class ThirdPersonController : MonoBehaviour, ThirdPersonInput.IGameplayAc
         Move();
     }
 
+    
+
     private void Move()
     {
         if (direction.magnitude >= 0.1f)
@@ -63,4 +66,9 @@ public class ThirdPersonController : MonoBehaviour, ThirdPersonInput.IGameplayAc
         this.direction = context.ReadValue<Vector2>();
     }
 
+    public void OnGrab(InputAction.CallbackContext context)
+    {
+        if(context.performed)
+            Grab();
+    }
 }
