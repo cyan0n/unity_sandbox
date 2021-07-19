@@ -43,6 +43,30 @@ public static class CardinalDirectionExtensionMethods
         return Vector2.zero;
     }
 
+    public static Vector3 ToVector3(this CardinalDirection direction)
+    {
+        switch (direction)
+        {
+            case CardinalDirection.North:
+            {
+                return Vector3.forward;
+            }
+            case CardinalDirection.East:
+            {
+                return Vector3.right;
+            }
+            case CardinalDirection.South:
+            {
+                return Vector3.back;
+            }
+            case CardinalDirection.West:
+            {
+                return Vector3.left;
+            }
+        }
+        return Vector3.zero;
+    }
+
     public static CardinalDirection ToCardinalDirection(this Vector2 vector)
     {
         CardinalDirection result = CardinalDirection.None;
