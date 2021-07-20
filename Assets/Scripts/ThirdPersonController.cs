@@ -67,8 +67,7 @@ public class ThirdPersonController : MonoBehaviour, ThirdPersonInput.IGameplayAc
     }
 
     public void OnGrab(InputAction.CallbackContext context)
-    {
-        if(context.performed)
-            Grab();
+    {    
+           
     }
 }
