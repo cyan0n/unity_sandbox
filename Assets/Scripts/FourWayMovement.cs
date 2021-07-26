@@ -37,4 +37,5 @@ public class FourWayMovement
         }
         return _direction.ToVector3();
     }
+
 }

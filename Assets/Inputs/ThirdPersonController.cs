@@ -29,7 +29,7 @@ public partial class @ThirdPersonInput : IInputActionCollection2, IDisposable
             ""actions"": [
                 {
                     ""name"": ""Move"",
-                    ""type"": ""Value"",
+                    ""type"": ""PassThrough"",
                     ""id"": ""e2a22d9d-929f-44c5-b197-5e839a284564"",
                     ""expectedControlType"": ""Vector2"",
                     ""processors"": """",
