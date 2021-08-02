@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using TMPro;
 
 public class HandCollider : MonoBehaviour
 {
@@ -8,7 +9,7 @@ public class HandCollider : MonoBehaviour
     {
         if(other.tag == "Box")
         {
-            other.transform.Find("PickupText").GetComponent<TextMesh>().color = Color.green;
+            other.transform.Find("PickupText").GetComponent<TextMeshPro>().color = Color.green;
         }
     }
 
@@ -16,7 +17,7 @@ public class HandCollider : MonoBehaviour
     {
         if (other.tag == "Box")
         {
-            other.transform.Find("PickupText").GetComponent<TextMesh>().color = Color.red;
+            other.transform.Find("PickupText").GetComponent<TextMeshPro>().color = Color.red;
         }
     }
 
